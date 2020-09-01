@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.test.dao.PersonMapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="Person" id="personMap">
+
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="person_name" property="personName" jdbcType="VARCHAR" />
+        <result column="person_sex" property="personSex" jdbcType="VARCHAR" />
+        <result column="person_age" property="personAge" jdbcType="VARCHAR" />
+        <result column="person_date" property="personDate" />
+        <result column="person_email" property="personEmail" jdbcType="VARCHAR" />
+        <result column="person_phone" property="personPhone" jdbcType="VARCHAR" />
+        <result column="person_plan" property="personPlan" jdbcType="VARCHAR" />
+        <result column="person_attr" property="personAttr" jdbcType="VARCHAR" />
+        <result column="province" property="province" jdbcType="VARCHAR" />
+        <result column="city" property="city" jdbcType="VARCHAR" />
+        <result column="regional" property="regional" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="selectPersonVO">
+        select id,person_name,person_sex,person_age,person_date,person_email,person_phone,person_plan,person_attr,province,city,regional from person
+    </sql>
+
+    <select id="selectPerson" parameterType="Person" resultMap="personMap">
+        <include refid="selectPersonVO"/>
+        where 1 = 1
+        <if test="personName != null and personName != ''">
+            AND person_name like concat('%', #{personName}, '%')
+        </if>
+        <if test="personAttr != null and personAttr != ''">
+            AND person_attr =  #{personAttr}
+        </if>
+        <if test="personDate != null ">
+            AND date_format(person_date,'%y%m%d') &gt;= date_format(#{personDate},'%y%m%d')
+        </if>
+        <if test="province != null and province != ''">
+            AND province =  #{province}
+        </if>
+        <if test="city != null and city != ''">
+            AND city =  #{city}
+        </if>
+        <if test="regional != null and regional != ''">
+            AND regional =  #{regional}
+        </if>
+    </select>
+    <insert id="insertPerson" parameterType="Person" useGeneratedKeys="true" keyProperty="id">
+        insert into person(
+        <if test="personName != null and personName != ''">person_name,</if>
+        <if test="personSex != null and personSex != ''">person_sex,</if>
+        <if test="personAge != null and personAge != ''">person_age,</if>
+        <if test="personDate != null ">person_date,</if>
+        <if test="personEmail != null and personEmail != ''">person_email,</if>
+        <if test="personPhone != null and personPhone != ''">person_phone,</if>
+        <if test="personPlan != null and personPlan != ''">person_plan,</if>
+        <if test="personAttr != null and personAttr != ''">person_attr,</if>
+        <if test="province != null and province != ''">province,</if>
+        <if test="city != null and city != ''">city,</if>
+        <if test="regional != null and regional != ''">regional,</if>
+        create_time
+        )values(
+        <if test="personName != null and personName != ''">#{personName},</if>
+        <if test="personSex != null and personSex != ''">#{personSex},</if>
+        <if test="personAge != null and personAge != ''">#{personAge},</if>
+        <if test="personDate != null ">#{personDate},</if>
+        <if test="personEmail != null and personEmail != ''">#{personEmail},</if>
+        <if test="personPhone != null and personPhone != ''">#{personPhone},</if>
+        <if test="personPlan != null and personPlan != ''">#{personPlan},</if>
+        <if test="personAttr != null and personAttr != ''">#{personAttr},</if>
+        <if test="province != null and province != ''">#{province},</if>
+        <if test="city != null and city != ''">#{city},</if>
+        <if test="regional != null and regional != ''">#{regional},</if>
+        sysdate()
+        )
+    </insert>
+
+</mapper>
